@@ -1,0 +1,902 @@
+{
+	"info": {
+		"_postman_id": "0deed645-270a-4570-b857-b51971bc3006",
+		"name": "SpaceX",
+		"description": "Automation test using SpaceX API.\n\n- basic automation using querys and mutation\n- using `Markdown` for documentation test\n- using `tv4` for schema validator\n\n\nPublic documentation can be consulting in https://api.spacex.land/graphql/",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "querys",
+			"item": [
+				{
+					"name": "capsules",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json()\r",
+									"eval(environment.funcaoGetRandonInt)\r",
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate contract\", function(){\r",
+									"    pm.expect(tv4.validate(responseBody, pm.globals.get(\"schema\"))).to.be.true;\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Return list of capsules, should be grather than One\", function () {\r",
+									"    pm.expect(responseBody.data.capsules.length).to.be.above(1)\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Capture id from random user\", function(){\r",
+									"    var  size = responseBody.data.capsules.length\r",
+									"\r",
+									"    pm.globals.set(\"id_capsule\", responseBody.data.capsules[getRandomInt(0,size)].id)\r",
+									"\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.globals.unset(\"schema\")\r",
+									"\r",
+									"var schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"data\": {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"capsules\": {\r",
+									"          \"type\": \"array\",\r",
+									"          \"items\": [\r",
+									"            {\r",
+									"              \"type\": \"object\",\r",
+									"              \"properties\": {\r",
+									"                \"dragon\": {\r",
+									"                  \"type\": \"object\",\r",
+									"                  \"properties\": {\r",
+									"                    \"active\": {\r",
+									"                      \"type\": \"boolean\"\r",
+									"                    },\r",
+									"                    \"id\": {\r",
+									"                      \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"name\": {\r",
+									"                      \"type\": \"string\"\r",
+									"                    }\r",
+									"                  },\r",
+									"                  \"required\": [\r",
+									"                    \"active\",\r",
+									"                    \"id\",\r",
+									"                    \"name\"\r",
+									"                  ]\r",
+									"                },\r",
+									"                \"id\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"landings\": {\r",
+									"                  \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"missions\": {\r",
+									"                  \"type\": \"array\",\r",
+									"                  \"items\": [\r",
+									"                    {\r",
+									"                      \"type\": \"object\",\r",
+									"                      \"properties\": {\r",
+									"                        \"flight\": {\r",
+									"                          \"type\": \"integer\"\r",
+									"                        },\r",
+									"                        \"name\": {\r",
+									"                          \"type\": \"string\"\r",
+									"                        }\r",
+									"                      },\r",
+									"                      \"required\": [\r",
+									"                        \"flight\",\r",
+									"                        \"name\"\r",
+									"                      ]\r",
+									"                    },\r",
+									"                    {\r",
+									"                      \"type\": \"object\",\r",
+									"                      \"properties\": {\r",
+									"                        \"flight\": {\r",
+									"                          \"type\": \"integer\"\r",
+									"                        },\r",
+									"                        \"name\": {\r",
+									"                          \"type\": \"string\"\r",
+									"                        }\r",
+									"                      },\r",
+									"                      \"required\": [\r",
+									"                        \"flight\",\r",
+									"                        \"name\"\r",
+									"                      ]\r",
+									"                    }\r",
+									"                  ]\r",
+									"                },\r",
+									"                \"original_launch\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"reuse_count\": {\r",
+									"                  \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"status\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"type\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                }\r",
+									"              },\r",
+									"              \"required\": [\r",
+									"                \"dragon\",\r",
+									"                \"id\",\r",
+									"                \"landings\",\r",
+									"                \"missions\",\r",
+									"                \"original_launch\",\r",
+									"                \"reuse_count\",\r",
+									"                \"status\",\r",
+									"                \"type\"\r",
+									"              ]\r",
+									"            }\r",
+									"          ]\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"capsules\"\r",
+									"      ]\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"data\"\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"pm.globals.set(\"schema\", schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "{\r\n  capsules(limit: 10, offset: 10, order: \"\", sort: \"\") {\r\n    dragon {\r\n      active\r\n      id\r\n      name\r\n    }\r\n    id\r\n    landings\r\n    missions {\r\n      flight\r\n      name\r\n    }\r\n    original_launch\r\n    reuse_count\r\n    status\r\n    type\r\n  }\r\n}\r\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "https://api.spacex.land/graphql/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"spacex",
+								"land"
+							],
+							"path": [
+								"graphql",
+								""
+							]
+						},
+						"description": "**Query** return a list of capsules"
+					},
+					"response": []
+				},
+				{
+					"name": "capsule",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.globals.unset(\"schema\")\r",
+									"\r",
+									"const schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"data\": {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"capsule\": {\r",
+									"          \"type\": \"object\",\r",
+									"          \"properties\": {\r",
+									"            \"id\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"landings\": {\r",
+									"              \"type\": \"integer\"\r",
+									"            },\r",
+									"            \"missions\": {\r",
+									"              \"type\": \"array\",\r",
+									"              \"items\": [\r",
+									"                {\r",
+									"                  \"type\": \"object\",\r",
+									"                  \"properties\": {\r",
+									"                    \"flight\": {\r",
+									"                      \"type\": \"integer\"\r",
+									"                    },\r",
+									"                    \"name\": {\r",
+									"                      \"type\": \"string\"\r",
+									"                    }\r",
+									"                  },\r",
+									"                  \"required\": [\r",
+									"                    \"flight\",\r",
+									"                    \"name\"\r",
+									"                  ]\r",
+									"                },\r",
+									"                {\r",
+									"                  \"type\": \"object\",\r",
+									"                  \"properties\": {\r",
+									"                    \"flight\": {\r",
+									"                      \"type\": \"integer\"\r",
+									"                    },\r",
+									"                    \"name\": {\r",
+									"                      \"type\": \"string\"\r",
+									"                    }\r",
+									"                  },\r",
+									"                  \"required\": [\r",
+									"                    \"flight\",\r",
+									"                    \"name\"\r",
+									"                  ]\r",
+									"                }\r",
+									"              ]\r",
+									"            },\r",
+									"            \"original_launch\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"reuse_count\": {\r",
+									"              \"type\": \"integer\"\r",
+									"            },\r",
+									"            \"status\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"type\": {\r",
+									"              \"type\": \"string\"\r",
+									"            }\r",
+									"          },\r",
+									"          \"required\": [\r",
+									"            \"id\",\r",
+									"            \"landings\",\r",
+									"            \"missions\",\r",
+									"            \"original_launch\",\r",
+									"            \"reuse_count\",\r",
+									"            \"status\",\r",
+									"            \"type\"\r",
+									"          ]\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"capsule\"\r",
+									"      ]\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"data\"\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"pm.globals.set(\"schema\", schema)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate contract\", function(){\r",
+									"    pm.expect(tv4.validate(responseBody, pm.globals.get(\"schema\"))).to.be.true;\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\r\n  capsule(id: \"{{id_capsule}}\") {\r\n    id\r\n    landings\r\n    missions {\r\n      flight\r\n      name\r\n    }\r\n    original_launch\r\n    reuse_count\r\n    status\r\n    type\r\n  }\r\n}\r\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "https://api.spacex.land/graphql/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"spacex",
+								"land"
+							],
+							"path": [
+								"graphql",
+								""
+							]
+						},
+						"description": "**Query** return a list of capsules\n\n_param_\n\n- `id_capsule` id of a random capuseles query"
+					},
+					"response": []
+				}
+			],
+			"description": "`querys` for request about **capsules**"
+		},
+		{
+			"name": "mutation",
+			"item": [
+				{
+					"name": "insert_users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate contract\", function(){\r",
+									"    pm.expect(tv4.validate(responseBody, pm.globals.get(\"schema\"))).to.be.true;\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Capture id from created user\", function(){\r",
+									"    pm.globals.set(\"id_capsule\", responseBody.data.insert_users.returning[0].id)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.globals.unset(\"schema\")\r",
+									"\r",
+									"var schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"data\": {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"insert_users\": {\r",
+									"          \"type\": \"object\",\r",
+									"          \"properties\": {\r",
+									"            \"returning\": {\r",
+									"              \"type\": \"array\",\r",
+									"              \"items\": [\r",
+									"                {\r",
+									"                  \"type\": \"object\",\r",
+									"                  \"properties\": {\r",
+									"                    \"id\": {\r",
+									"                      \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"name\": {\r",
+									"                      \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"rocket\": {\r",
+									"                      \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"timestamp\": {\r",
+									"                      \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"twitter\": {\r",
+									"                      \"type\": \"null\"\r",
+									"                    }\r",
+									"                  },\r",
+									"                  \"required\": [\r",
+									"                    \"id\",\r",
+									"                    \"name\",\r",
+									"                    \"rocket\",\r",
+									"                    \"timestamp\",\r",
+									"                    \"twitter\"\r",
+									"                  ]\r",
+									"                }\r",
+									"              ]\r",
+									"            }\r",
+									"          },\r",
+									"          \"required\": [\r",
+									"            \"returning\"\r",
+									"          ]\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"insert_users\"\r",
+									"      ]\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"data\"\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"pm.globals.set(\"schema\", schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\r\n  insert_users(objects: {name: \"{{name}}\", rocket: \"{{rocket}}\"}) {\r\n    returning {\r\n      id\r\n      name\r\n      rocket\r\n      timestamp\r\n      twitter\r\n    }\r\n  }\r\n}\r\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "https://api.spacex.land/graphql/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"spacex",
+								"land"
+							],
+							"path": [
+								"graphql",
+								""
+							]
+						},
+						"description": "**mutation** create a new users \n\n_param_\n\n- `name`: param of type `string`\n- `rcoket`: param of type `string`"
+					},
+					"response": []
+				},
+				{
+					"name": "users_by_pk",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate contract\", function(){\r",
+									"    pm.expect(tv4.validate(responseBody, pm.globals.get(\"schema\"))).to.be.true;\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Validate return data\", function(){\r",
+									"    pm.expect(responseBody.data.users_by_pk).to.eq(null)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.globals.unset(\"schema\")\r",
+									"\r",
+									"var schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"data\": {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"users_by_pk\": {\r",
+									"          \"type\": \"null\"\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"users_by_pk\"\r",
+									"      ]\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"data\"\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"pm.globals.set(\"schema\", schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\r\n  users_by_pk(id: \"{{id_capsule}}\") {\r\n    id\r\n    name\r\n    rocket\r\n    timestamp\r\n    twitter\r\n  }\r\n}\r\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "https://api.spacex.land/graphql/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"spacex",
+								"land"
+							],
+							"path": [
+								"graphql",
+								""
+							]
+						},
+						"description": "**query** for list a user by id\n\n_param_\n\n- `id`: unique hash"
+					},
+					"response": []
+				},
+				{
+					"name": "update_users",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.globals.unset(\"schema\")\r",
+									"\r",
+									"var schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"data\": {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"update_users\": {\r",
+									"          \"type\": \"object\",\r",
+									"          \"properties\": {\r",
+									"            \"returning\": {\r",
+									"              \"type\": \"array\",\r",
+									"              \"items\": [\r",
+									"                {\r",
+									"                  \"type\": \"object\",\r",
+									"                  \"properties\": {\r",
+									"                    \"id\": {\r",
+									"                      \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"name\": {\r",
+									"                      \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"rocket\": {\r",
+									"                      \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"timestamp\": {\r",
+									"                      \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"twitter\": {\r",
+									"                      \"type\": \"null\"\r",
+									"                    }\r",
+									"                  },\r",
+									"                  \"required\": [\r",
+									"                    \"id\",\r",
+									"                    \"name\",\r",
+									"                    \"rocket\",\r",
+									"                    \"timestamp\",\r",
+									"                    \"twitter\"\r",
+									"                  ]\r",
+									"                }\r",
+									"              ]\r",
+									"            }\r",
+									"          },\r",
+									"          \"required\": [\r",
+									"            \"returning\"\r",
+									"          ]\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"update_users\"\r",
+									"      ]\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"data\"\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"pm.globals.set(\"schema\", schema)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate contract\", function(){\r",
+									"    pm.expect(tv4.validate(responseBody, pm.globals.get(\"schema\"))).to.be.true;\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Validate return data\", function(){\r",
+									"    pm.expect(responseBody.data.update_users.returning[0].name).to.eq(pm.environment.get(\"update_name\"))\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\r\n  update_users(where: {id: {_eq: \"{{id_capsule}}\"}}, _set: {name: \"{{update_name}}\"}) {\r\n    returning {\r\n      id\r\n      name\r\n      rocket\r\n      timestamp\r\n      twitter\r\n    }\r\n  }\r\n}\r\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "https://api.spacex.land/graphql/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"spacex",
+								"land"
+							],
+							"path": [
+								"graphql",
+								""
+							]
+						},
+						"description": "**mutation** for update users\n\n_param_ \n\n- `id`: unique hash \n- `name`: param for receve update"
+					},
+					"response": []
+				},
+				{
+					"name": "delete_users",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.globals.unset(\"schema\")\r",
+									"\r",
+									"var schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"data\": {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"delete_users\": {\r",
+									"          \"type\": \"object\",\r",
+									"          \"properties\": {\r",
+									"            \"returning\": {\r",
+									"              \"type\": \"array\",\r",
+									"              \"items\": [\r",
+									"                {\r",
+									"                  \"type\": \"object\",\r",
+									"                  \"properties\": {\r",
+									"                    \"id\": {\r",
+									"                      \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"name\": {\r",
+									"                      \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"rocket\": {\r",
+									"                      \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"timestamp\": {\r",
+									"                      \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"twitter\": {\r",
+									"                      \"type\": \"null\"\r",
+									"                    }\r",
+									"                  },\r",
+									"                  \"required\": [\r",
+									"                    \"id\",\r",
+									"                    \"name\",\r",
+									"                    \"rocket\",\r",
+									"                    \"timestamp\",\r",
+									"                    \"twitter\"\r",
+									"                  ]\r",
+									"                }\r",
+									"              ]\r",
+									"            }\r",
+									"          },\r",
+									"          \"required\": [\r",
+									"            \"returning\"\r",
+									"          ]\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"delete_users\"\r",
+									"      ]\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"data\"\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"pm.globals.set(\"schema\", schema)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate contract\", function(){\r",
+									"    pm.expect(tv4.validate(responseBody, pm.globals.get(\"schema\"))).to.be.true;\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\r\n  delete_users(where: {id: {_eq: \"{{id_capsule}}\"}}) {\r\n    returning {\r\n      id\r\n      name\r\n      rocket\r\n      timestamp\r\n      twitter\r\n    }\r\n  }\r\n}\r\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "https://api.spacex.land/graphql/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"spacex",
+								"land"
+							],
+							"path": [
+								"graphql",
+								""
+							]
+						},
+						"description": "**mutation** for delete users\n\n_param_ \n\n- `id`: unique hash"
+					},
+					"response": []
+				},
+				{
+					"name": "users_by_pk check delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate contract\", function(){\r",
+									"    pm.expect(tv4.validate(responseBody, pm.globals.get(\"schema\"))).to.be.true;\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Validate return data\", function(){\r",
+									"    pm.expect(responseBody.data.users_by_pk.name).to.eq(pm.environment.get(\"name\"))\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.globals.unset(\"schema\")\r",
+									"\r",
+									"var schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"data\": {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"users_by_pk\": {\r",
+									"          \"type\": \"object\",\r",
+									"          \"properties\": {\r",
+									"            \"id\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"name\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"rocket\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"timestamp\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"twitter\": {\r",
+									"              \"type\": \"null\"\r",
+									"            }\r",
+									"          },\r",
+									"          \"required\": [\r",
+									"            \"id\",\r",
+									"            \"name\",\r",
+									"            \"rocket\",\r",
+									"            \"timestamp\",\r",
+									"            \"twitter\"\r",
+									"          ]\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"users_by_pk\"\r",
+									"      ]\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"data\"\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"pm.globals.set(\"schema\", schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\r\n  users_by_pk(id: \"{{id_capsule}}\") {\r\n    id\r\n    name\r\n    rocket\r\n    timestamp\r\n    twitter\r\n  }\r\n}\r\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "https://api.spacex.land/graphql/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"spacex",
+								"land"
+							],
+							"path": [
+								"graphql",
+								""
+							]
+						},
+						"description": "**query** to check if user it was delete\n\n_param_\n\n- `id`: unique hash"
+					},
+					"response": []
+				}
+			],
+			"description": "`CRUD` for request about **user**"
+		}
+	]
+}
