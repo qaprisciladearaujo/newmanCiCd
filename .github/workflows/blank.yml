@@ -19,6 +19,7 @@ jobs:
           npm install -g newman-reporter-htmlextra
           newman run ./collection/SpaceX.postman_collection.json -e ./environment/SpaceX.postman_environment.json --reporters cli,htmlextra report-spacex.html
       - name: Download a Report
+        if: always()
         uses: actions/download-artifact@v2.0.10
         with:
           name: report-spacex.html
