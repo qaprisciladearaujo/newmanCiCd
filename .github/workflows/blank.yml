@@ -22,5 +22,6 @@ jobs:
         uses: actions/download-artifact@v2.0.10
         with:
           name: report-spacex.html
-          path: report-spacex.html       
+          path: report-spacex.html
+          when: always
 
