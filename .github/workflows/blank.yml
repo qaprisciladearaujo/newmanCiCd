@@ -21,7 +21,7 @@ jobs:
 
       - name: Run Postman collection
         run: |
-            newman run ./collection/SpaceX.postman_collection.json -e ./environment/SpaceX.postman_environment.json --reporters cli,htmlextra testResults/report-spacex.html
+            newman run ./collection/SpaceX.postman_collection.json -e ./environment/SpaceX.postman_environment.json -r htmlextra --reporter-htmlextra-export testResults/htmlreport.html --reporter-htmlextra-darkTheme  > testResults/runreport1.html
       
       - name: Download a Report
         if: always()
