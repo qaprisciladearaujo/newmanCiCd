@@ -17,10 +17,7 @@ jobs:
       - name: Build environment
         run: |
           newman --version
-          npm install -g newman-reporter-htmlextra
-
-      - name: Make Directory for results
-        run: mkdir -p testResults       
+          npm install -g newman-reporter-htmlextra  
 
       - name: Run Postman collection
         run: |
