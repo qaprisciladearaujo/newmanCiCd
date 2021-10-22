@@ -13,27 +13,24 @@ jobs:
       image: postman/newman
     steps:
       - uses: actions/checkout@v1
-      - name: Run API Tests
+      
+      - name: Build environment
         run: |
           newman --version
           npm install -g newman-reporter-htmlextra
-       # Make directory to upload the test results
+
       - name: Make Directory for results
         run: mkdir -p testResults       
-        
-  test:
-    needs: [setUp]
-    runs-on: ubuntu-latest
-    name: Test
-    steps:
-     - name: Run Postman collection
-       run: |
-          newman run ./collection/SpaceX.postman_collection.json -e ./environment/SpaceX.postman_environment.json --reporters cli,htmlextra testResults/report-spacex.html
-     - name: Download a Report
-       if: always()
-       uses: actions/download-artifact@v2.0.10
-       with:
-          name: report-spacex.html
-          path: testResults/report-spacex.html
-          when: always
+
+      - name: Run Postman collection
+        run: |
+            newman run ./collection/SpaceX.postman_collection.json -e ./environment/SpaceX.postman_environment.json --reporters cli,htmlextra testResults/report-spacex.html
+      
+      - name: Download a Report
+        if: always()
+        uses: actions/download-artifact@v2.0.10
+        with:
+            name: report-spacex.html
+            path: testResults/report-spacex.html
+            when: always
 
