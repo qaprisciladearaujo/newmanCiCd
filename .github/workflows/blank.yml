@@ -21,7 +21,7 @@ jobs:
 
       - name: Run Postman collection
         run: |
-            newman run ./collection/SpaceX.postman_collection.json -e ./environment/SpaceX.postman_environment.json -r htmlextra,cli --reporter-htmlextra-export ./testResults/htmlreport.html
+            newman run ./collection/SpaceX.postman_collection.json -e ./environment/SpaceX.postman_environment.json -r htmlextra,cli,allure --reporter-htmlextra-export ./testResults/htmlreport.html
       
       - name: Download a Report
         if: always()
@@ -29,4 +29,15 @@ jobs:
         with:
             name: report-spacex.html
             path: testResults
+
+      - name: Allure report
+        if: always()
+        # You may pin to the exact commit or the version.
+        # uses: afiore/action-allure-report@e43ebd6f4f4c74b07b1eb02f042902bbe6786a19
+        uses: afiore/action-allure-report@v0.1.0
+        with:
+          # Allure test result data dir
+          results-dir: ./allure-results
+          # Allure report target dir
+          report-dir: ./allure-report
 
